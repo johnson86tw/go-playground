@@ -12,6 +12,7 @@ func main() {
 		for {
 			select {
 			case <-exit:
+
 				fmt.Println("Exit!")
 				return
 			case <-time.After(2 * time.Second):
