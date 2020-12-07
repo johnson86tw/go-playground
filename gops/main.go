@@ -1,15 +1,16 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"os"
 	"time"
-
-	"github.com/google/gops/agent"
 )
 
 func main() {
-	if err := agent.Listen(agent.Options{}); err != nil {
-		log.Fatal(err)
+	pid := os.Getpid()
+	fmt.Println(pid)
+
+	for {
+		time.Sleep(time.Second)
 	}
-	time.Sleep(time.Hour)
 }
