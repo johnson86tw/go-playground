@@ -7,26 +7,30 @@ import (
 	"time"
 )
 
+// Pattern: Worker Queue
+
 func main() {
 	const limitNum = 10
 	const jobCount = 100
 
 	var wg sync.WaitGroup
-	wg.Add(limitNum)
+	wg.Add(jobCount)
 
-	// 為什麼沒有 jobCount 就不行？
-	// 因為queue是unbuffer，被塞入一百個值，一定要被讀出來，goroutine才會終止 no!
-	// 只要在 found 加上 jobCount 就可以
-	found := make(chan int, jobCount)
+	found := make(chan int)
 	queue := make(chan int)
 
 	// 100個工作
 	go func(queue chan<- int) {
+		counter := 0
 		for i := 0; i < jobCount; i++ {
 			// 把工作寫入 queue
 			queue <- i
+			counter++
 		}
+
+		// 因為 queue 是 unbuffered，所以此routine會在這裡被block住，等到所有queue都被讀出，才會執行下方的程式碼
 		close(queue)
+		fmt.Println("close channel queue, counter is ", counter)
 	}(queue)
 
 	// for i := 0; i < jobCount; i++ {
@@ -34,13 +38,12 @@ func main() {
 	// }
 	// close(queue)
 
-	// 只有十個 goroutine，每個 goroutine 都再搶 queue 裡頭的工作
+	// 只有十個 goroutine，每個 goroutine 都在搶 queue 裡頭的工作
 	for i := 0; i < limitNum; i++ {
 		go func(queue <-chan int, found chan<- int) {
-			defer wg.Done()
 			// 讀出 queue 的工作內容
 			for val := range queue {
-				// defer wg.Done()
+				defer wg.Done()
 				waitTime := rand.Int31n(1000)
 				fmt.Println("job: ", val, "wait time: ", waitTime, "ms")
 				time.Sleep(time.Duration(waitTime) * time.Millisecond)
@@ -49,16 +52,14 @@ func main() {
 		}(queue, found)
 	}
 
-	// 直到工作做完，關閉 channel
-	// go func() {
-	// 	wg.Wait()
-	// 	close(found)
-	// }()
-
-	wg.Wait()
-	close(found)
-
 	var res []int
+
+	// 必須使用 goroutine，等到一百個工作完成以後，要 close channel found
+	// 才不會在下方的讀 found 迴圈中讀完全部的 channel 然後還在等待著讀。因為 found 是 unbuffered
+	go func() {
+		wg.Wait()
+		close(found)
+	}()
 
 	// 讀出所有 found channel 回來的訊息
 	for p := range found {
@@ -66,6 +67,6 @@ func main() {
 		res = append(res, p)
 	}
 
-	fmt.Println("Done! result: ", res)
+	fmt.Printf("%d numbers of the jobs done!\n", len(res))
 
 }
