@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	// If the channel is unbuffered, the sender blocks until the receiver has received the value
+	// If the channel is unbuffered, the sender routine blocks until the receiver has received the value
 	c := make(chan bool)
 
 	go func() {
