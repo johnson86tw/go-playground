@@ -14,7 +14,13 @@ func main() {
 	defer c1Cancel()
 
 	c2, c2Cancel := context.WithCancel(c)
-	defer c2Cancel()
+	// defer c2Cancel()
+
+	if false {
+		fmt.Println("no exec")
+		cCancel()
+		c2Cancel()
+	}
 
 	c11, c11Cancel := context.WithCancel(c1)
 	defer c11Cancel()
@@ -41,9 +47,9 @@ func main() {
 		fmt.Println(key, " is ", s)
 	}
 
-	if !cancelBefore {
-		fmt.Println("start cancel c")
-		cCancel()
-	}
+	// if !cancelBefore {
+	// 	fmt.Println("start cancel c")
+	// 	cCancel()
+	// }
 
 }
