@@ -1,20 +1,28 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 )
 
+// 要思考的是，程式有沒有必要把 Iterator 跟 Collection 抽象化出來，
+// 以此例來說，抽象化成 interface 的好處，是當有多個實踐 Iterator 的實例要做同一個function進行處理時，可以節省程式碼。
+// 參考 interface/polymorphism
+
+// 但其缺點是，Push 變成要填入空界面，才能容納各種 type，導致靜態型別無法判定，須多做 type Assertion
+// 如果不做抽象化，UserCollection 的 Push 方法就能在靜態下就約束其型別
+
 // Collection ...
 type Collection interface {
 	Iterator() Iterator
-	Push(interface{})
+	Push(interface{}) error
 	Len() int
 }
 
 // Iterator ...
 type Iterator interface {
-	hasNext() bool
+	HasNext() bool
 	Next() interface{}
 }
 
@@ -35,12 +43,12 @@ func (uc *UserCollection) Len() int {
 }
 
 // Push ...
-func (uc *UserCollection) Push(user interface{}) {
+func (uc *UserCollection) Push(user interface{}) error {
 	if u, ok := user.(*User); ok {
 		uc.users = append(uc.users, u)
-	} else {
-		log.Println("warning: fail to push into UserCollection", u)
+		return nil
 	}
+	return errors.New("warning: fail to push into UserCollection")
 }
 
 // UserIterator embed UserCollection for iterating
@@ -56,7 +64,8 @@ func (uc *UserCollection) Iterator() Iterator {
 	}
 }
 
-func (u *UserIterator) hasNext() bool {
+// HasNext ...
+func (u *UserIterator) HasNext() bool {
 	if u.index < len(u.users) {
 		return true
 	}
@@ -65,7 +74,7 @@ func (u *UserIterator) hasNext() bool {
 
 // Next ...
 func (u *UserIterator) Next() interface{} {
-	if u.hasNext() {
+	if u.HasNext() {
 		user := u.users[u.index]
 		u.index++
 		return user
@@ -103,11 +112,14 @@ func main() {
 	uc.Push(user2)
 
 	// 嘗試 push 非 User type 的 struct 會造成執行時才能發現錯誤
-	uc.Push(admin)
+	err := uc.Push(admin)
+	if err != nil {
+		log.Println(err)
+	}
 
 	iter := uc.Iterator()
 
-	for iter.hasNext() {
+	for iter.HasNext() {
 		user := iter.Next()
 		fmt.Printf("User is %+v\n", user)
 	}
