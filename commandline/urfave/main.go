@@ -13,7 +13,7 @@ func main() {
 	app.Name = "example"
 	app.Usage = "Usage example"
 
-	app.Commands = []*cli.Command{
+	app.Commands = []cli.Command{
 		{
 			Name:  "greet",
 			Usage: "greeting",
