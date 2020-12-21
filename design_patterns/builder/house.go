@@ -1,6 +1,4 @@
-package main
-
-import "fmt"
+package builder
 
 // https://golangbyexample.com/builder-pattern-golang/
 
@@ -47,21 +45,6 @@ func getBuilder(builderType string) builder {
 type house struct {
 	doorType string
 	floorNum int
-}
-
-func main() {
-	normalBuilder := getBuilder("normal")
-	iglooBuilder := getBuilder("igloo")
-
-	director := newDirector(normalBuilder)
-	normalHouse := director.buildHouse()
-
-	fmt.Printf("normalHouse: %+v\n", normalHouse)
-
-	director.setBuilder(iglooBuilder)
-	iglooHouse := director.buildHouse()
-
-	fmt.Printf("iglooHouse: %+v\n", iglooHouse)
 }
 
 type normalBuilder struct {

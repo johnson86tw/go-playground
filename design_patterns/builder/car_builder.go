@@ -1,4 +1,4 @@
-package main
+package builder
 
 import "fmt"
 
@@ -46,11 +46,11 @@ type Builder interface {
 	Paint(Color) Builder
 	Wheels(Wheels) Builder
 	TopSpeed(Speed) Builder
-	Build() Interface
+	Build() ICar
 }
 
-// Interface ...
-type Interface interface {
+// ICar ...
+type ICar interface {
 	Drive() error
 	Stop() error
 }
@@ -91,7 +91,7 @@ func (cb *CarBuilder) TopSpeed(speed Speed) Builder {
 }
 
 // Build ...
-func (cb *CarBuilder) Build() Interface {
+func (cb *CarBuilder) Build() ICar {
 	return &cb.Car
 }
 
@@ -106,15 +106,4 @@ func (c *Car) Drive() error {
 func (c *Car) Stop() error {
 	fmt.Println("Stop!")
 	return nil
-}
-
-// client
-func main() {
-	assembly := NewBuilder().Paint(RedColor)
-
-	familyCar := assembly.Wheels(SteelWheels).TopSpeed(MPH).Build()
-	familyCar.Drive()
-
-	sportsCar := assembly.Wheels(SportsWheels).TopSpeed(KPH).Build()
-	sportsCar.Drive()
 }
