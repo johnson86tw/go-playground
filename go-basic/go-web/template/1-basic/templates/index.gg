@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    {{$n := .Name}}
+    {{$x := .Num}}
+    <h2>Hello {{$n}}</h2>
+    <p>The meaning of life is {{$x}}</p>
+
+    <ul>
+        {{range $i, $e := .Bar}}
+        <li>{{$e}} - {{$i}}</li>
+        {{end}}
+    </ul>
+
+    <ul>
+        {{range $e := .M}}
+        <li>{{$e}}</li>
+        {{end}}
+    </ul>
+</body>
+
+</html>

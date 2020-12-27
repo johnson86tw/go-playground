@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go</title>
+</head>
+
+<body>
+    <h2>Hello World</h2>
+    <p>Date: {{.T | tf}}</p>
+    <p>Hi, I am {{uc .Name}}</p>
+    <p>This is my {{ft .Thing}}</p>
+    <p>Number {{6 | fsq | fsqrt}}</p>
+
+    <p>Lover: {{index .Users 1}}</p>
+    {{range .Users}}
+        {{if .Admin }}
+            <p>Admination is {{.Name}} </p>
+        {{end}}
+    {{end}}
+
+    {{if gt (index .Users 0).Age (index .Users 1).Age }}
+        <p>{{(index .Users 0).Name}} is older than {{(index .Users 1).Name}}</p>
+        <p>John's Double Age: {{(index .Users 0).DoubleAge}}</p>
+    {{end}}
+
+    <h4>Method</h4>
+
+    <p>{{.Number}}</p>
+    <p>{{"Howard" | .AddLastName}}</p>
+
+
+</body>
+
+</html>

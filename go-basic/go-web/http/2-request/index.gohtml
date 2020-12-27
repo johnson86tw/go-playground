@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Request</title>
+</head>
+<body>
+
+    {{if eq .Method "POST"}}
+        <p>Method: {{ .Method}}</p>
+        <p>Host: {{.Host}}</p>
+        <p>Content-Length: {{.ContentLength}}</p>
+        <ul>
+            <li>Scheme: {{.URL.Scheme}}</li>
+            <li>Opaque: {{.URL.Opaque}}</li>
+            <li>Host: {{.URL.Host}}</li>
+            <li>Path: {{.URL.Path}}</li>
+            <li>RawPath: {{.URL.RawPath}}</li>
+            <li>ForceQuery: {{.URL.ForceQuery}}</li>
+            <li>RawQuery: {{.URL.RawQuery}}</li>
+            <li>Fragment: {{.URL.Fragment}}</li>
+        </ul>
+    {{end}}
+
+    <form  action="/" method="post">
+        <input type="text" name="book">
+        <input type="submit" name="submit-btn" value="confirm">
+    </form>
+
+    <h3>Headers</h3>
+    <ul>
+        {{range $key, $val := .Header}}
+            <h4>{{$key}}</h4>
+                <ul>
+                    {{range $val}}
+                        <p>{{.}}</p>
+                    {{end}}
+                </ul>
+        {{end}}
+    </ul>
+
+
+</body>
+
+</html>

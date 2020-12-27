@@ -1,0 +1,8 @@
+main p {
+    color: red
+}
+
+header p {
+    border: solid 1px gray;
+    color: orange;
+}
