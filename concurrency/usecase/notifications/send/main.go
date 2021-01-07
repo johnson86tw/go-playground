@@ -21,9 +21,11 @@ func main() {
 			return values[i] < values[j]
 		})
 
+		// notify sorting is done
 		done <- struct{}{}
 	}()
 
+	// waiting here for notification
 	<-done
-	fmt.Println(values)
+
 }
