@@ -19,8 +19,8 @@ const (
 )
 
 func main() {
-	var m size = 0
-	m.toString()
+	var m size = 1
+	m.toString() // Medium
 
 	fmt.Println(a, b, c) // 2 2 2
 }
